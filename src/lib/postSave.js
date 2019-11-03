@@ -13,8 +13,8 @@ const topics = require.main.require('./src/topics');
 const winston = require.main.require('winston');
 
 const nconf = require.main.require('nconf');
-const Moment = require('moment');
-const Discord = require('discord.js');
+const moment = require.main.require('moment');
+const discord = require.main.require('discord.js');
 
 const fireHook = p(plugins.fireHook);
 const getTopicField = p(topics.getTopicField);
@@ -104,12 +104,12 @@ const postSave = async (data) => {
 
       // connect discord webhook
       if (match) {
-        hook = new Discord.WebhookClient(match[1], match[2]);
+        hook = new discord.WebhookClient(match[1], match[2]);
       }
       if (hook) {
         const slug = await getTopicSlug(post.tid);
-        const startDate = new Moment(event.startDate);
-        const endDate = new Moment(event.endDate);
+        const startDate = new moment(event.startDate);
+        const endDate = new moment(event.endDate);
         hook.sendMessage('', { embeds: [
           {
             title: event.name,
