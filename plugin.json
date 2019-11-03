@@ -1,5 +1,5 @@
 {
-  "name": "NodeBB Calendar plugin",
+  "name": "NodeBB Calendar plugin with Discord support",
   "library": "library.js",
   "staticDirs": {
     "bundles": "build/bundles/"

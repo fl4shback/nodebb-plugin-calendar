@@ -1,7 +1,7 @@
 {
   "name": "nodebb-plugin-calendar",
   "version": "1.0.0-alpha.50",
-  "description": "Calendar and events for NodeBB",
+  "description": "Calendar and events for NodeBB with discord integration",
   "main": "library.js",
   "scripts": {
     "test": "npm run lint && babel-node ./src/lib/tests",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pitaj/nodebb-plugin-calendar.git"
+    "url": "git+https://github.com/fl4shback/nodebb-plugin-calendar.git"
   },
   "keywords": [
     "nodebb",
@@ -38,6 +38,7 @@
     "babel-loader": "^8.0.6",
     "chalk": "^2.4.1",
     "del": "^4.1.1",
+	"discord.js": "^11.2.1",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-babel": "^5.1.0",

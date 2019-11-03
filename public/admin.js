@@ -7,9 +7,12 @@ define('admin/plugins/calendar', [], function () {
       checkingInterval: parseInt($('#checkingInterval').val(), 10),
       mainPostOnly: !!$('#mainPostOnly')[0].checked,
       respondIfCanReply: !!$('#respondIfCanReply')[0].checked,
-      calendarViews: $('#calendarViews').val(),
+      calendarViews: $('#calendarViews').val(),  
+      enableDiscordNotifications: !!$('#enableDiscordNotifications')[0].checked,
+      discordWebhookUrl: $('#discordWebhookUrl').val()
     };
     $.get('/api/admin/plugins/calendar/save', { settings: JSON.stringify(settings) }, function () {
+	  console.log(settings);
       app.alertSuccess();
     });
   });
