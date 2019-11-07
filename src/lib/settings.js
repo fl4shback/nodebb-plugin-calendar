@@ -16,14 +16,21 @@ const convert = {
 };
 
 const getSettings = async () => {
-  const { checkingInterval, respondIfCanReply, mainPostOnly, calendarViews, enableDiscordNotifications, discordWebhookUrl } = await getObject('plugin-calendar:settings') || {};
+  const {
+    checkingInterval,
+    respondIfCanReply,
+    mainPostOnly,
+    calendarViews,
+    enableDiscordNotifications,
+    discordWebhookUrl,
+  } = await getObject('plugin-calendar:settings') || {};
   return {
     checkingInterval: convert.checkingInterval(checkingInterval),
     respondIfCanReply: convert.respondIfCanReply(respondIfCanReply),
     mainPostOnly: convert.mainPostOnly(mainPostOnly),
     calendarViews: convert.calendarViews(calendarViews),
-	enableDiscordNotifications: convert.enableDiscordNotifications(enableDiscordNotifications),
-    discordWebhookUrl: convert.discordWebhookUrl(discordWebhookUrl)
+    enableDiscordNotifications: convert.enableDiscordNotifications(enableDiscordNotifications),
+    discordWebhookUrl: convert.discordWebhookUrl(discordWebhookUrl),
   };
 };
 
