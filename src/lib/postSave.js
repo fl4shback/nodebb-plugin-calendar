@@ -6,7 +6,7 @@ import { deleteEvent, saveEvent, eventExists, getEvent } from './event';
 import validateEvent from './validateEvent';
 import { notify } from './reminders';
 import { getSetting } from './settings';
-import { momentLang } from '../client/clientSideTranslation';
+import { getLanguage } from 'translator';
 
 const { fireHook } = require.main.require('./src/plugins');
 const { getTopicField } = require.main.require('./src/topics');
@@ -89,6 +89,7 @@ const postSave = async (data) => {
   event.repeats = JSON.stringify(event.repeats);
   event = await fireHook('filter:plugin-calendar.event.post', event);
 
+  let momentLang = getLanguage().toLowerCase().replace(/_/g, '-');
   if (event) {
     await saveEvent(event);
     winston.verbose(`[plugin-calendar] Event (pid:${event.pid}) saved`);
