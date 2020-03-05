@@ -6,7 +6,7 @@ import { deleteEvent, saveEvent, eventExists, getEvent } from './event';
 import validateEvent from './validateEvent';
 import { notify } from './reminders';
 import { getSetting } from './settings';
-import { momentLang } from './clientSideTranslation';
+import { momentLang } from '../client/clientSideTranslation';
 
 const { fireHook } = require.main.require('./src/plugins');
 const { getTopicField } = require.main.require('./src/topics');
