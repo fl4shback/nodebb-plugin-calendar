@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pitaj/nodebb-plugin-calendar.git"
+    "url": "git+https://github.com/fl4shback/nodebb-plugin-calendar.git"
   },
   "keywords": [
     "nodebb",

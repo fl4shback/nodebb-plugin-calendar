@@ -6,6 +6,7 @@ import { deleteEvent, saveEvent, eventExists, getEvent } from './event';
 import validateEvent from './validateEvent';
 import { notify } from './reminders';
 import { getSetting } from './settings';
+import { momentLang } from './clientSideTranslation';
 
 const { fireHook } = require.main.require('./src/plugins');
 const { getTopicField } = require.main.require('./src/topics');
@@ -103,6 +104,7 @@ const postSave = async (data) => {
         hook = new discord.WebhookClient(match[1], match[2]);
       }
       if (hook) {
+        moment.locale(momentLang);
         const slug = await getTopicSlug(post.tid);
         const startDate = new moment(event.startDate);
         const endDate = new moment(event.endDate);
@@ -118,16 +120,12 @@ const postSave = async (data) => {
               },
               fields: [
                 {
-                  name: 'Location',
-                  value: event.location,
+                  name: 'Début',
+                  value: `${startDate.format('llll')})`,
                 },
                 {
-                  name: 'Event Start',
-                  value: `${startDate.format('MMM D, YYYY h:mmA')} (UTC${startDate.format('ZZ')})`,
-                },
-                {
-                  name: 'Event End',
-                  value: `${endDate.format('MMM D, YYYY h:mmA')} (UTC${endDate.format('ZZ')})`,
+                  name: 'Fin',
+                  value: `${endDate.format('llll')})`,
                 },
               ],
             },
