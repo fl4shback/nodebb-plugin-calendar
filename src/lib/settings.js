@@ -1,18 +1,16 @@
-import { promisify as p } from 'util';
-
-const db = require.main.require('./src/database');
-
-const getObject = p(db.getObject);
-const getObjectField = p(db.getObjectField);
-const setObject = p(db.setObject);
+const {
+  getObject,
+  getObjectField,
+  setObject,
+} = require.main.require('./src/database');
 
 const convert = {
-  checkingInterval: x => parseInt(x, 10) || 1000 * 60 * 5,
-  respondIfCanReply: x => x === true || x === 'true',
-  mainPostOnly: x => x === true || x === 'true',
-  calendarViews: x => x || 'month,agendaWeek,agendaDay',
-  enableDiscordNotifications: x => x === true || x === 'true',
-  discordWebhookUrl: x => x,
+  checkingInterval: (x) => parseInt(x, 10) || 1000 * 60 * 5,
+  respondIfCanReply: (x) => x === true || x === 'true',
+  mainPostOnly: (x) => x === true || x === 'true',
+  calendarViews: (x) => x || 'month,agendaWeek,agendaDay',
+  enableDiscordNotifications: (x) => x === true || x === 'true',
+  discordWebhookUrl: (x) => x,
 };
 
 const getSettings = async () => {
@@ -34,7 +32,7 @@ const getSettings = async () => {
   };
 };
 
-const setSettings = settings => setObject('plugin-calendar:settings', settings);
+const setSettings = (settings) => setObject('plugin-calendar:settings', settings);
 
 const getSetting = async (key) => {
   const value = await getObjectField('plugin-calendar:settings', key);
