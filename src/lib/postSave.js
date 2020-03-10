@@ -6,7 +6,6 @@ import { deleteEvent, saveEvent, eventExists, getEvent } from './event';
 import validateEvent from './validateEvent';
 import { notify } from './reminders';
 import { getSetting } from './settings';
-import { initialize } from './translatorModule';
 
 const { fireHook } = require.main.require('./src/plugins');
 const { getTopicField } = require.main.require('./src/topics');
@@ -104,7 +103,7 @@ const postSave = async (data) => {
         hook = new discord.WebhookClient(match[1], match[2]);
       }
       if (hook) {
-        moment.locale(momentLang);
+        moment.locale('fr');
         const slug = await getTopicSlug(post.tid);
         const startDate = new moment(event.startDate);
         const endDate = new moment(event.endDate);
@@ -114,18 +113,18 @@ const postSave = async (data) => {
               title: event.name,
               description: event.description,
               url: `${forumURL}/topic/${slug}`,
-              color: 14775573,
+              color: 14202131,
               thumbnail: {
                 url: 'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/calendar-512.png',
               },
               fields: [
                 {
                   name: 'Début',
-                  value: `${startDate.format('llll')})`,
+                  value: `${startDate.format('llll')}`,
                 },
                 {
                   name: 'Fin',
-                  value: `${endDate.format('llll')})`,
+                  value: `${endDate.format('llll')}`,
                 },
               ],
             },
