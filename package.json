@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-calendar",
-  "version": "1.0.0-alpha.56",
+  "version": "1.0.0-alpha.57",
   "description": "Calendar and events for NodeBB",
   "main": "library.js",
   "scripts": {
@@ -57,6 +57,6 @@
     "validator": "^13.0.0"
   },
   "nbbpm": {
-    "compatibility": "~1.13.0"
+    "compatibility": "~1.16 || ~1.17"
   }
 }
