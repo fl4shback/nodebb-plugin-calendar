@@ -7,22 +7,24 @@ import {
   saveEvent,
   eventExists,
   getEvent,
+  Event,
 } from './event';
 import validateEvent from './validateEvent';
 import { notify } from './reminders';
 import { getSetting } from './settings';
+import { filter__post_save } from './hooks';
 
-const { fireHook } = require.main.require('./src/plugins');
-const { getTopicField } = require.main.require('./src/topics');
-const { getPostField } = require.main.require('./src/posts');
-const winston = require.main.require('winston');
+const { fireHook } = require.main?.require('./src/plugins');
+const { getTopicField } = require.main?.require('./src/topics');
+const { getPostField } = require.main?.require('./src/posts');
+const winston = require.main?.require('winston');
 
-const nconf = require.main.require('nconf');
-const moment = require.main.require('moment');
-const discord = require.main.require('discord.js');
+const nconf = require.main?.require('nconf');
+const { moment } = require.main?.require('moment');
+const discord = require.main?.require('discord.js');
 const forumURL = nconf.get('url');
 
-const isMainPost = async (pid, tid) => {
+const isMainPost = async (pid: number, tid: number) => {
   const mainPid = await getTopicField(tid, 'mainPid');
   return mainPid === pid;
 };
@@ -32,12 +34,12 @@ const getTopicSlug = async (tid) => {
   return topicSlug;
 };
 
-const postSave = async (data) => {
+const postSave: filter__post_save = async (data) => {
   const { post } = data;
   const eventInfo = parse(post.content);
 
-  const uid = post.uid || post.editor || data.uid;
-  const pid = parseInt(post.pid || data.data.pid, 10);
+  const uid = post.uid || post.editor || data.uid || 0;
+  const pid = parseInt(post.pid || data.data.pid || '', 10);
   const tid = parseInt(post.tid || await getPostField(pid, 'tid'), 10);
 
   // delete event if no longer in post
@@ -68,10 +70,8 @@ const postSave = async (data) => {
 
   const [failed, failures] = validateEvent(eventInfo);
   if (failed) {
-    const obj = failures.reduce((val, failure) => ({
-      ...val,
-      [failure]: failure === 'repeatEndDate' ? eventInfo.repeats.endDate : eventInfo[failure],
-    }), {});
+    const obj = Object.fromEntries(failures.map(failure => [failure, failure === 'repeatEndDate' ? eventInfo.repeats?.endDate : eventInfo[failure]]));
+
     winston.verbose(`[plugin-calendar] Event (pid:${pid}) validation failed: `, obj);
     return invalid();
   }
@@ -89,7 +89,7 @@ const postSave = async (data) => {
     return invalid();
   }
 
-  let event = {
+  let event: Event = {
     ...eventInfo,
     name: validator.escape(eventInfo.name),
     location: eventInfo.location.trim(),
@@ -102,7 +102,7 @@ const postSave = async (data) => {
 
   if (event) {
     await saveEvent(event);
-    winston.verbose(`[plugin-calendar] Event (pid:${event.pid}) saved`);
+    winston.verbose(`[plugin-calendar] Event (pid:${pid}) saved`);
 
     // If discord notifications enabled, send message to Discord channel
     if (await getSetting('enableDiscordNotifications')) {
@@ -116,7 +116,7 @@ const postSave = async (data) => {
       }
       if (hook) {
         moment.locale('fr');
-        const slug = await getTopicSlug(post.tid);
+        const slug = await getTopicSlug(tid);
         const startDate = new moment(event.startDate);
         const endDate = new moment(event.endDate);
         hook.sendMessage('', {
@@ -142,7 +142,7 @@ const postSave = async (data) => {
             },
           ],
         }).catch(console.error);
-        winston.verbose(`[plugin-calendar] Discord Notification for Event (pid:${event.pid}) sent.`);
+        winston.verbose(`[plugin-calendar] Discord Notification for Event (pid:${pid}) sent.`);
       }
     }
   }
