@@ -1,5 +1,6 @@
 import validator from 'validator';
 
+import 'moment/locale/fr';
 import parse, { inPost } from './parse';
 import { canPostEvent, canPostMandatoryEvent } from './privileges';
 import {
@@ -20,8 +21,8 @@ const { getPostField } = require.main?.require('./src/posts');
 const winston = require.main?.require('winston');
 
 const nconf = require.main?.require('nconf');
-const { moment } = require.main?.require('moment');
-const discord = require.main?.require('discord.js');
+const Moment = require.main?.require('moment');
+const Discord = require.main?.require('discord.js');
 const forumURL = nconf.get('url');
 
 const isMainPost = async (pid: number, tid: number) => {
@@ -29,7 +30,7 @@ const isMainPost = async (pid: number, tid: number) => {
   return mainPid === pid;
 };
 
-const getTopicSlug = async (tid) => {
+const getTopicSlug = async (tid: number) => {
   const topicSlug = await getTopicField(tid, 'slug');
   return topicSlug;
 };
@@ -108,17 +109,16 @@ const postSave: filter__post_save = async (data) => {
     if (await getSetting('enableDiscordNotifications')) {
       const url = await getSetting('discordWebhookUrl');
       let hook = null;
-      const match = url.match(/https:\/\/discordapp\.com\/api\/webhooks\/([0-9]+?)\/(.+?)$/);
+      const match = url.match(/https:\/\/discord(?:app)?\.com\/api\/webhooks\/([0-9]+?)\/(.+?)$/);
 
       // connect discord webhook
       if (match) {
-        hook = new discord.WebhookClient(match[1], match[2]);
+        hook = new Discord.WebhookClient(match[1], match[2]);
       }
       if (hook) {
-        moment.locale('fr');
         const slug = await getTopicSlug(tid);
-        const startDate = new moment(event.startDate);
-        const endDate = new moment(event.endDate);
+        const startDate = new Moment(event.startDate);
+        const endDate = new Moment(event.endDate);
         hook.sendMessage('', {
           embeds: [
             {
@@ -141,7 +141,7 @@ const postSave: filter__post_save = async (data) => {
               ],
             },
           ],
-        }).catch(console.error);
+        });
         winston.verbose(`[plugin-calendar] Discord Notification for Event (pid:${pid}) sent.`);
       }
     }

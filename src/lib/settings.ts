@@ -35,7 +35,7 @@ const getSettings = async (): Promise<Settings> => {
     mainPostOnly,
     calendarViews,
     enableDiscordNotifications,
-    discordWebhookUrl
+    discordWebhookUrl,
   } = await getObject('plugin-calendar:settings') || {};
   return {
     checkingInterval: convert.checkingInterval(checkingInterval),

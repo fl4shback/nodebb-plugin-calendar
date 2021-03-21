@@ -36,17 +36,19 @@
               <input type="text" class="form-control" name="calendarViews" id="calendarViews" value="{settings.calendarViews}" />
             </div>
           </div>
-		  <div class="form-group">
+          <div class="form-group">
             <label for="enableDiscordNotifications">
-              <input type="checkbox" name="enableDiscordNotifications" id="enableDiscordNotifications" <!-- IF settings.enableDiscordNotifications --> checked <!-- ENDIF settings.enableDiscordNotifications --> />
+              <input type="checkbox" name="enableDiscordNotifications" id="enableDiscordNotifications" {{{ if settings.enableDiscordNotifications }}} checked {{{ end }}} />
               Enable Discord Webhook Notifications for all events
             </label>
           </div>
-          <div class="form-group">
-            <label for="discordWebhookUrl">
-              <input type="text" class="form-control" name="discordWebhookUrl" id="discordWebhookUrl" value="{settings.discordWebhookUrl}" />
+          <div class="form-group row">
+            <label for="discordWebhookUrl" class="col-xs-12 col-sm-8">
               Discord Webhook URL for sending notifications
             </label>
+            <div class="col-xs-12 col-sm-4">
+              <input type="text" class="form-control" name="discordWebhookUrl" id="discordWebhookUrl" value="{settings.discordWebhookUrl}" />
+            </div>
           </div>
         </div>
       </div>
