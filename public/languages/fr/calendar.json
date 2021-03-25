@@ -22,7 +22,7 @@
   "location_ext": "Lieu de l'événement",
   "reminders": "Rappel",
   "add_reminder": "Ajouter un rappel",
-  "mandatory": "Obligatoir",
+  "mandatory": "Obligatoire",
 
   "repetition_custom": "Personnaliser...",
   "repeat_weekly": "Hebdomadaire",

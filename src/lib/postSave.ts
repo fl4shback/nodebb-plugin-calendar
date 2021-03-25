@@ -1,6 +1,7 @@
 import validator from 'validator';
 
-import 'moment/locale/fr';
+// import { translate } from 'translator';
+import moment from 'moment';
 import parse, { inPost } from './parse';
 import { canPostEvent, canPostMandatoryEvent } from './privileges';
 import {
@@ -20,19 +21,14 @@ const { getTopicField } = require.main?.require('./src/topics');
 const { getPostField } = require.main?.require('./src/posts');
 const winston = require.main?.require('winston');
 
+// imports for Discord Webhook + base url + moment localization
+const meta = require.main?.require('./src/meta');
 const nconf = require.main?.require('nconf');
-const Moment = require.main?.require('moment');
 const Discord = require.main?.require('discord.js');
-const forumURL = nconf.get('url');
 
 const isMainPost = async (pid: number, tid: number) => {
   const mainPid = await getTopicField(tid, 'mainPid');
   return mainPid === pid;
-};
-
-const getTopicSlug = async (tid: number) => {
-  const topicSlug = await getTopicField(tid, 'slug');
-  return topicSlug;
 };
 
 const postSave: filter__post_save = async (data) => {
@@ -105,38 +101,42 @@ const postSave: filter__post_save = async (data) => {
     await saveEvent(event);
     winston.verbose(`[plugin-calendar] Event (pid:${pid}) saved`);
 
-    // If discord notifications enabled, send message to Discord channel
+    // If Discord notifications enabled in ACP, send message to Discord Webhook
     if (await getSetting('enableDiscordNotifications')) {
       const url = await getSetting('discordWebhookUrl');
       let hook = null;
       const match = url.match(/https:\/\/discord(?:app)?\.com\/api\/webhooks\/([0-9]+?)\/(.+?)$/);
 
-      // connect discord webhook
+      // Create Discord WebhookClient
       if (match) {
         hook = new Discord.WebhookClient(match[1], match[2]);
       }
       if (hook) {
-        const slug = await getTopicSlug(tid);
-        const startDate = new Moment(event.startDate);
-        const endDate = new Moment(event.endDate);
-        hook.sendMessage('', {
+        const forumURL = nconf.get('url');
+        const momentLang = meta.config.defaultLang.toLowerCase().replace(/_/g, '-');
+        moment.locale(momentLang);
+        const startDate = moment(event.startDate).format('LLLL');
+        const endDate = moment(event.endDate).format('LLLL');
+        // const startLabel = translate('[[calendar:start_date]]');
+        // const endLabel = translate('[[calendar:end_date]]');
+        hook.send('', {
           embeds: [
             {
               title: event.name,
               description: event.description,
-              url: `${forumURL}/topic/${slug}`,
+              url: `${forumURL}/topic/${tid}`,
               color: 14202131,
               thumbnail: {
                 url: 'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/calendar-512.png',
               },
               fields: [
                 {
-                  name: 'Début',
-                  value: `${startDate.format('llll')}`,
+                  name: 'test',
+                  value: startDate,
                 },
                 {
-                  name: 'Fin',
-                  value: `${endDate.format('llll')}`,
+                  name: 'test',
+                  value: endDate,
                 },
               ],
             },
